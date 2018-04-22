@@ -56,7 +56,7 @@ services:
     ports:
       - 27022:27017
 
-    mongors3n1:
+  mongors3n1:
     image: mongo
     container_name: mapreduce_mongors3n1
     command: mongod --replSet mongors3 --dbpath /data/db
@@ -100,3 +100,13 @@ services:
       - ./data/mongocfg2:/data/db
     ports:
       - 27027:27017
+
+  mongos:
+    image: mongo
+    container_name: mapreduce_mongos1
+    depends_on:
+      - mongocfg1
+      - mongocfg2
+    command: mongos --configdb mongocfg1:27017,mongocfg2:27017
+    ports:
+      - 27028:27017
