@@ -1,5 +1,5 @@
 rs.initiate({
-	_id: 'mapreduce_mongocfg1',
+	_id: 'mongocfg',
 	configsvr: true,
 	members: [
 		{ _id: 0, host: 'mapreduce_mongocfg1:27017'},

@@ -2,109 +2,104 @@ version: '2'
 
 services:
 
+  # Config Servers
   mongocfg1:
     image: mongo
     container_name: mapreduce_mongocfg1
-    command: mongod --configsvr --replSet mongocfg --dbpath /data/db
+    command: mongod --configsvr --replSet mongocfg --dbpath /data/db --port 27017
     volumes:
       - ./data/mongocfg1:/data/db
       - ./:/app
-    ports:
-      - 27026:27017
 
   mongocfg2:
     image: mongo
     container_name: mapreduce_mongocfg2
-    command: mongod --configsvr --replSet mongocfg --dbpath /data/db
+    command: mongod --configsvr --replSet mongocfg --dbpath /data/db --port 27017
     volumes:
       - ./data/mongocfg2:/data/db
-    ports:
-      - 27027:27017
+      - ./:/app
 
   mongors1n1:
     image: mongo
     container_name: mapreduce_mongors1n1
-    command: mongod --shardsvr --replSet mongors1 --dbpath /data/db
+    command: mongod --shardsvr --replSet mongors1 --dbpath /data/db --port 27018
     volumes:
       - ./data/mongors1n1:/data/db
-    ports:
-      - 27017:27017
+      - ./:/app
 
   mongors1n2:
     image: mongo
     container_name: mapreduce_mongors1n2
-    command: mongod --shardsvr --replSet mongors1 --dbpath /data/db
+    command: mongod --shardsvr --replSet mongors1 --dbpath /data/db --port 27018
     volumes:
       - ./data/mongors1n2:/data/db
-    ports:
-      - 27018:27017
+      - ./:/app
 
   mongors1n3:
     image: mongo
     container_name: mapreduce_mongors1n3
-    command: mongod --shardsvr --replSet mongors1 --dbpath /data/db
+    command: mongod --shardsvr --replSet mongors1 --dbpath /data/db --port 27018
     volumes:
       - ./data/mongors1n3:/data/db
-    ports:
-      - 27019:27017
+      - ./:/app
 
   mongors2n1:
     image: mongo
     container_name: mapreduce_mongors2n1
-    command: mongod --shardsvr --replSet mongors2 --dbpath /data/db
+    command: mongod --shardsvr --replSet mongors2 --dbpath /data/db --port 27019
     volumes:
       - ./data/mongors2n1:/data/db
-    ports:
-      - 27020:27017
+      - ./:/app
 
   mongors2n2:
     image: mongo
     container_name: mapreduce_mongors2n2
-    command: mongod --shardsvr --replSet mongors2 --dbpath /data/db
+    command: mongod --shardsvr --replSet mongors2 --dbpath /data/db --port 27019
     volumes:
       - ./data/mongors2n2:/data/db
-    ports:
-      - 27021:27017
+      - ./:/app
 
   mongors2n3:
     image: mongo
     container_name: mapreduce_mongors2n3
-    command: mongod --shardsvr --replSet mongors2 --dbpath /data/db
+    command: mongod --shardsvr --replSet mongors2 --dbpath /data/db --port 27019
     volumes:
       - ./data/mongors2n3:/data/db
-    ports:
-      - 27022:27017
+      - ./:/app
 
   mongors3n1:
     image: mongo
     container_name: mapreduce_mongors3n1
-    command: mongod --shardsvr --replSet mongors3 --dbpath /data/db
+    command: mongod --shardsvr --replSet mongors3 --dbpath /data/db --port 27020
     volumes:
       - ./data/mongors3n1:/data/db
-    ports:
-      - 27023:27017
+      - ./:/app
 
   mongors3n2:
     image: mongo
     container_name: mapreduce_mongors3n2
-    command: mongod --shardsvr --replSet mongors3 --dbpath /data/db
+    command: mongod --shardsvr --replSet mongors3 --dbpath /data/db --port 27020
     volumes:
       - ./data/mongors3n2:/data/db
-    ports:
-      - 27024:27017
+      - ./:/app
 
   mongors3n3:
     image: mongo
     container_name: mapreduce_mongors3n3
-    command: mongod --shardsvr --replSet mongors2 --dbpath /data/db
+    command: mongod --shardsvr --replSet mongors3 --dbpath /data/db --port 27020
     volumes:
       - ./data/mongors3n3:/data/db
-    ports:
-      - 27025:27017
+      - ./:/app
 
+  # Router
   mongos:
     image: mongo
     container_name: mapreduce_mongos1
+    command: mongos --configdb mongocfg/mongocfg1:27017,mongocfg2:27017
+    volumes:
+      - ./:/app 
+    ports:
+      - 27017:27017
     depends_on:
       - mongocfg1
       - mongocfg2
@@ -117,6 +112,3 @@ services:
       - mongors3n1
       - mongors3n2
       - mongors3n3
-    command: mongos --configdb mongocfg/mongocfg1:27017,mongocfg2:27017
-    ports:
-      - 27028:27017

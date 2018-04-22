@@ -1,7 +1,8 @@
 rs.initiate({
-	_id: "node1",
+	_id: "mongors1",
 	members: [
-		{ _id: 0, host: "localhost:27012"},
-		{ _id: 1, host: "localhost:27013"}
+		{ _id: 0, host: "mongors1n1:27018"},
+		{ _id: 1, host: "mongors1n2:27018"},
+		{ _id: 2, host: "mongors1n3:27018"},
 	]
 })
