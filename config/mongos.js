@@ -1,3 +1,4 @@
+// Add shards
 sh.addShard('mongors1/mongors1n1:27018')
 sh.addShard('mongors1/mongors1n2:27018')
 sh.addShard('mongors1/mongors1n3:27018')
@@ -10,4 +11,9 @@ sh.addShard('mongors3/mongors3n1:27020')
 sh.addShard('mongors3/mongors3n2:27020')
 sh.addShard('mongors3/mongors3n3:27020')
 
+// Configure sharding
 sh.enableSharding('youtube-trending')
+
+db.createCollection('videos')
+db.videos.ensureIndex({'_id': 'hashed'})
+sh.shardCollection('youtube-trending.videos', {'_id': 'hashed'})
