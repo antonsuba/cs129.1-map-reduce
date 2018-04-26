@@ -1,3 +1,5 @@
+#!/bin/bash
+
 docker exec mapreduce_mongocfg1 bash -c "mongo --port 27017 < /app/config/config.js"
 
 docker exec mapreduce_mongors1n1 bash -c "mongo --port 27018 < /app/config/repl1.js"
