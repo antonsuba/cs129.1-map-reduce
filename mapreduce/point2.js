@@ -1,30 +1,36 @@
 var map = function(){
+	var raw_date = this.components.trending_date; //data set date format: yy.dd.mm
+	var year = "20" + raw_date.substr(0,2);
+	var day = raw_date.substr(3,2);
+	var month = raw_date.substr(6,2);
+	var date = year + "-" + day + "-" + month;
+
 	emit(
 		{
+			country: this.components.country, 
 			category: this.components.category_id,
-			trending_date: this.components.trending_date
+			week: {$week: new Date(date)}
 		},
 		{	
-			videos: [this.components.title],
-			total_views: this.components.views,
 			count: 1
 		}
 	)
 } 
 
 var reduce = function(key, values){
-	var total_views = 0;
-	var videos = [];
 	var count = 0;
 	for(var i = 0; i < values.length; i++){
-		total_views += values[i].total_views;
-		videos[i] = values[i].videos[0];
 		count++
 	}
 
 	return {
-		videos: videos,
-		total_views: total_views,
 		count: count
 	};
 }
+
+db.runCommand({
+	mapReduce: 'videos',
+	map: map,
+	reduce: reduce,
+	out: 'videos.report2'
+});
